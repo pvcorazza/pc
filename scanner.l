@@ -1,11 +1,18 @@
 /*
-  Coloque aqui o identificador do grupo e dos seus membros
+  Anderson Lentz da Silva
+  Paulo Victor Corazza
 */
 %{
 #include "parser.h" //arquivo automaticamente gerado pelo bison
+#include "cc_misc.h"
+
+//Variável definida em cc_misc.h para contagem de linhas
+extern int line_count;
 %}
 
 %%
+
+ /* Palavras Reservadas */
 
 "int" return TK_PR_INT;
 "float" return TK_PR_FLOAT;
@@ -32,21 +39,9 @@
 "private" return TK_PR_PRIVATE;
 "public" return TK_PR_PUBLIC;
 "protected" return TK_PR_PROTECTED;
-"<=" return TK_OC_LE;
-">=" return TK_OC_GE;
-"==" return TK_OC_EQ;
-"!=" return TK_OC_NE;
-"&&" return TK_OC_AND;
-"||" return TK_OC_OR;
-"<<" return TK_OC_SL;
-">>" return TK_OC_SR;
-[+-]?[0-9]+ return TK_LIT_INT;
-([+-]?[0-9]+)\.[0-9]+ return TK_LIT_FLOAT;
-false return TK_LIT_FALSE;
-true return TK_LIT_TRUE;
-'.' return TK_LIT_CHAR;
-\"[^\"]*\" return TK_LIT_STRING;
-([A-Za-z]|_)+([0-9]|([A-Za-z]|_))* return TK_IDENTIFICADOR;
+
+ /*Caracteres Especiais*/
+
 "," return yytext[0];
 ";" return yytext[0];
 ":" return yytext[0];
@@ -63,17 +58,42 @@ true return TK_LIT_TRUE;
 "<" return yytext[0];
 ">" return yytext[0];
 "=" return yytext[0];
-"!" return yytext[0];d
+"!" return yytext[0];
 "&" return yytext[0];
 "$" return yytext[0];
 "%" return yytext[0];
 "#" return yytext[0];
 "^" return yytext[0];
-" "|\t {}
-(\/\/)(.)* {}
-(\/\*)(.|\n)*(\*\/) {}
 
+ /*Operadores Compostos*/
 
+"<=" return TK_OC_LE;
+">=" return TK_OC_GE;
+"==" return TK_OC_EQ;
+"!=" return TK_OC_NE;
+"&&" return TK_OC_AND;
+"||" return TK_OC_OR;
+"<<" return TK_OC_SL;
+">>" return TK_OC_SR;
 
+ /*Identificadores*/
+
+([A-Za-z]|_)+([0-9]|([A-Za-z]|_))* return TK_IDENTIFICADOR;
+
+ /*Literais*/
+
+[+-]?[0-9]+ return TK_LIT_INT;
+([+-]?[0-9]+)\.[0-9]+ return TK_LIT_FLOAT;
+false return TK_LIT_FALSE;
+true return TK_LIT_TRUE;
+'.' return TK_LIT_CHAR;
+\"[^\"]*\" return TK_LIT_STRING;
+
+ /*Comentários, espaços, quebras de linha...*/
+
+"//".* {}
+"/*"[^*]*"*/" {}
+\t|\r|" " {}
+\n line_count++;
 
 %%
