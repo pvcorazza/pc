@@ -5,9 +5,11 @@
 %{
 #include "parser.h" //arquivo automaticamente gerado pelo bison
 #include "cc_misc.h"
+#include "cc_dict.h"
 
 //Variável definida em cc_misc.h para contagem de linhas
 extern int line_count;
+extern comp_dict_t *symbol_table; 
 %}
 
 %%
@@ -78,16 +80,16 @@ extern int line_count;
 
  /*Identificadores*/
 
-([A-Za-z]|_)+([0-9]|([A-Za-z]|_))* return TK_IDENTIFICADOR;
+([A-Za-z]|_)+([0-9]|([A-Za-z]|_))* return insert_token(TK_IDENTIFICADOR);
 
  /*Literais*/
 
-[+-]?[0-9]+ return TK_LIT_INT;
-([+-]?[0-9]+)\.[0-9]+ return TK_LIT_FLOAT;
-false return TK_LIT_FALSE;
-true return TK_LIT_TRUE;
-'.' return TK_LIT_CHAR;
-\"[^\"]*\" return TK_LIT_STRING;
+[+-]?[0-9]+ 				return insert_token(TK_LIT_INT);
+([+-]?[0-9]+)\.[0-9]+ 		return insert_token(TK_LIT_FLOAT);
+false 						return insert_token(TK_LIT_FALSE);
+true 						return insert_token(TK_LIT_TRUE);
+'.' 						return insert_token(TK_LIT_CHAR);
+\"[^\"]*\" 					return insert_token(TK_LIT_STRING);
 
  /*Comentários, espaços, quebras de linha...*/
 
@@ -97,3 +99,24 @@ true return TK_LIT_TRUE;
 \n line_count++;
 
 %%
+
+int insert_token(int token){
+
+
+	char *lexema = (char*) malloc(sizeof(char) * (strlen (yytext)) + 1);
+	
+	strcpy(lexema,yytext);
+
+	//printf("lexema: %s, linha %d \n",lexema,line_count);
+
+
+	dict_put(symbol_table,lexema,line_count);	//insere o lexema na tabela hash
+			
+	int linha = dict_get(symbol_table,lexema);
+	//printf("Incluiu lexema na tabela\n");
+
+	free(lexema);
+	return token;
+}
+
+

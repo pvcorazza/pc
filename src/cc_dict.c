@@ -192,7 +192,10 @@ void *dict_put(comp_dict_t * dict, char *key, void *value)
     comp_dict_item_t *exists = dict_item_get(dict->data[hash], key);
     if (!exists) {
       dict_item_insert(dict->data[hash], newitem);
+      printf("Identificador nao existe na tabela de simbolos\n");
     } else {
+      //atualiza a linha em que foi achado o lexema que ja esta na tabela
+      dict->data[hash]->value = value; 
       dict_item_free_item(newitem);
       return exists->value;
     }

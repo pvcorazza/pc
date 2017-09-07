@@ -1,6 +1,9 @@
 #include "cc_misc.h"
+#include "cc_dict.h"
 
 int line_count = 1;
+
+comp_dict_t *symbol_table; 
 
 int comp_get_line_number (void)
 {
@@ -16,11 +19,17 @@ void yyerror (char const *mensagem)
 void main_init (int argc, char **argv)
 {
   //implemente esta função com rotinas de inicialização, se necessário
+
+	
+	symbol_table = dict_new();		//Cria tabela de simbolos
+	//printf("Criado tabela de simbolos\n\n");
 }
 
 void main_finalize (void)
 {
-  //implemente esta função com rotinas de inicialização, se necessário
+
+	//dict_debug_print(symbol_table);
+  
 }
 
 void comp_print_table (void)
