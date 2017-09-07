@@ -37,4 +37,5 @@ void comp_print_table (void)
   //para cada entrada na tabela de símbolos
   //Etapa 1: chame a função cc_dict_etapa_1_print_entrada
   //implemente esta função
+    
 }
