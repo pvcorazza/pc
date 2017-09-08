@@ -2,13 +2,13 @@
   Anderson Lentz da Silva
   Paulo Victor Corazza
 */
+
 %{
 #include "parser.h" //arquivo automaticamente gerado pelo bison
 #include "cc_misc.h"
 #include "cc_dict.h"
 
-//Variável definida em cc_misc.h para contagem de linhas
-extern int line_count;
+extern int line_count; //Variável definida em cc_misc.h para contagem de linhas
 extern comp_dict_t *symbol_table; 
 %}
 
@@ -94,14 +94,14 @@ true 						return insert_token(TK_LIT_TRUE);
  /*Comentários, espaços, quebras de linha...*/
 
 "//".* {}
-"/*"[^*]*"*/" {}
+"/*"[^*]*"*/" count_comment_lines();
 \t|\r|" " {}
 \n line_count++;
+. return TOKEN_ERRO;
 
 %%
 
 int insert_token(int token){
-
 
 	char *lexema = (char*) malloc(sizeof(char) * (strlen (yytext)) + 1);
 	
@@ -109,14 +109,20 @@ int insert_token(int token){
 
 	//printf("lexema: %s, linha %d \n",lexema,line_count);
 
-
 	dict_put(symbol_table,lexema,line_count);	//insere o lexema na tabela hash
-			
 	int linha = dict_get(symbol_table,lexema);
 	//printf("Incluiu lexema na tabela\n");
 
 	free(lexema);
 	return token;
+}
+
+void count_comment_lines() {
+    for (int i=0; i<yyleng-1; i++) {
+        if (yytext[i] == '\n') {
+            line_count++;
+        }
+    }
 }
 
 
