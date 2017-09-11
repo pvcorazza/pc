@@ -8,6 +8,8 @@
 #include "cc_misc.h"
 #include "cc_dict.h"
 
+int insert_token(int token);
+
 extern int line_count; //Variável definida em cc_misc.h para contagem de linhas
 extern comp_dict_t *symbol_table; 
 %}
@@ -88,8 +90,8 @@ extern comp_dict_t *symbol_table;
 
 [+-]?[0-9]+ 			return insert_token(TK_LIT_INT);
 ([+-]?[0-9]+)\.[0-9]+ 	return insert_token(TK_LIT_FLOAT);
-false 					return insert_token(TK_LIT_FALSE);
-true 					return insert_token(TK_LIT_TRUE);
+false					return insert_token(TK_LIT_FALSE);
+true					return insert_token(TK_LIT_TRUE);
 '.' 					return insert_token(TK_LIT_CHAR);
 \"[^\"]*\" 				return insert_token(TK_LIT_STRING);
 

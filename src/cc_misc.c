@@ -45,24 +45,24 @@ void main_init (int argc, char **argv)
 
 void main_finalize (void)
 {
+    if (symbol_table->occupation >= 1) { //se a tabela tem ao menos 1 entrada, libera a estrutura removendo os elementos.
+        for (int i = 0; i < symbol_table->size; ++i) {
+            if (symbol_table->data[i]) {
+                dict_remove(symbol_table, symbol_table->data[i]->key);
+            }
+        }
+    }
+
 
 }
 
 void comp_print_table (void)
 {
-
-	printf("Imprimindo tabela de simbolos\n" );
-
-	for (int i = 0; i < symbol_table->size; ++i) {
+    for (int i = 0; i < symbol_table->size; ++i) {
 	    if (symbol_table->data[i]) {
-
 	      	cc_dict_etapa_1_print_entrada(symbol_table->data[i]->key, symbol_table->data[i]->value);
-
 	      	if (symbol_table->data[i]->next)	//entra aqui se ocorreu um caso de overflow
 	      		dict_item_list_print(symbol_table->data[i]->next);
-
 	    }
-
   	}
-
 }
